@@ -321,7 +321,7 @@ input:focus, select:focus {
     border: 1px solid #9ae6b4;
 }
 
-.flash-erro {
+.flash-error {
     background-color: var(--cor-erro-fundo);
     color: var(--cor-erro);
     border: 1px solid #feb2b2;
