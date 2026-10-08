@@ -17,7 +17,7 @@ class Time(Base):
     responsavel = Column(String(100))
 
 
-class Jogadores(Base):
+class Jogador(Base):
     __tablename__ = "jogadores"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

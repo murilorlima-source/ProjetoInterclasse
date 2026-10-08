@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
 from banco import tabela_time, tabela_jogador, tabela_partida
-from database import db_sesseion, Time, Jogadores, Partida
+from database import db_sesseion, Time, Jogador, Partida
 
 app = Flask(__name__)
 app.secret_key = "murilorodrigo"
@@ -15,29 +15,23 @@ def dashboard():
     # 1- montar o select
     times_sql = select(Time)
     # 2- Executar o select
-    times = db_sesseion.execute(times_sql).scalars().all()
-    jogadores_sql = select(Jogadores)
-    jogadores = db_sesseion.execute(jogadores_sql).scalars().all()
+    times = tabela_time.select_quantidade_total()
+    jogadores_sql = select(Jogador)
+    jogadores = tabela_jogador.select_quantidade_total()
     partidas_sql = select(Partida)
-    partidas = db_sesseion.execute(partidas_sql).scalars().all()
+    partidas = tabela_partida.select_quantidade_total()
 
-
-    nome = times
     return render_template(
         "dashboard.html",
-        total_jogadores=len(jogadores),
-        total_times=len(times),
-        total_partidas=len(partidas),
+        total_jogadores=jogadores,
+        total_times=times,
+        total_partidas=partidas
     )
 
 
 @app.route("/jogadores")
 def listar_jogadores():
-    # buscar todos os jogadores no banco
-    # 1- montar o select
-    jogadores_sql = select(Jogadores)
-    # 2- Executar o select
-    jogadores = db_sesseion.execute(jogadores_sql).scalars().all()
+    jogadores = tabela_jogador.select_todos()
     print(jogadores)
     return render_template("jogadores.html", jogadores=jogadores)
 
@@ -75,14 +69,9 @@ def novo_jogador():
 
 @app.route("/times")
 def listar_times():
-    # Buscar todos os times no banco
-    # 1- montar o select
-    times_sql = select(Time)
-    # 2- Executar o select
-    times = db_sesseion.execute(times_sql).scalars().all()
+    times = tabela_time.select_todos()
     print(times)
     return render_template("times.html", times=times)
-
 
 
 @app.route("/times/novo", methods=["GET", "POST"])
@@ -110,8 +99,8 @@ def novo_time():
 
 @app.route("/partidas")
 def listar_partidas():
-    partidas_sql = select(Partida)
-    partidas = db_sesseion.execute(partidas_sql).scalars().all()
+    partidas = tabela_partida.select_todos()
+    print(partidas)
     return render_template("partidas.html", partidas=partidas)
 
 

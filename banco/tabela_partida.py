@@ -1,14 +1,37 @@
-from flask import flash
-from sqlalchemy import select
-from sqlalchemy.exc import SQLAlchemyError
+from encodings.aliases import aliases
+from time import time
 
-from database import db_sesseion, Partida
+from flask import flash
+from sqlalchemy import select, func
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.sql.elements import or_
+
+from database import db_sesseion, Partida, Time
 
 
 def select_todos():
-    partidas_sql = select(Partida)
-    partidas = db_sesseion.execute(partidas_sql).scalars().all()
-    return partidas
+    TimeCasa = aliases(Time)
+    TimeVisitante = aliases(Time)
+
+    partidas_sql = (
+        select(Partida, TimeCasa, TimeVisitante)
+        .join(TimeCasa, Partida.time_casa_id == Time.id)
+        .join(TimeVisitante, Partida.time_visitante_id == Time.id)
+    )
+
+
+
+    partidas_casa = db_sesseion.execute(partidas_sql).all()
+    print(partidas_casa)
+    return partidas_casa
+
+def select_quantidade_total():
+    partidas_sql = select(func.count(Partida.id))
+    qtd_total = db_sesseion.execute(partidas_sql).scalar()
+    return qtd_total
+print(select_quantidade_total())
+
+
 
 def salvar_partida(time_casa_id, time_visitante_id, gols_casa, gols_visitante, data_partida):
     try:
