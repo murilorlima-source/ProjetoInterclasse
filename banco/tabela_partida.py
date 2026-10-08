@@ -1,22 +1,20 @@
-from encodings.aliases import aliases
-from time import time
-
 from flask import flash
 from sqlalchemy import select, func
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import aliased
 from sqlalchemy.sql.elements import or_
 
 from database import db_sesseion, Partida, Time
 
 
 def select_todos():
-    TimeCasa = aliases(Time)
-    TimeVisitante = aliases(Time)
+    TimeCasa = aliased(Time)
+    TimeVisitante = aliased(Time)
 
     partidas_sql = (
         select(Partida, TimeCasa, TimeVisitante)
-        .join(TimeCasa, Partida.time_casa_id == Time.id)
-        .join(TimeVisitante, Partida.time_visitante_id == Time.id)
+        .join(TimeCasa, Partida.time_casa_id == TimeCasa.id)
+        .join(TimeVisitante, Partida.time_visitante_id == TimeVisitante.id)
     )
 
 
