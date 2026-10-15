@@ -31,6 +31,21 @@ print(select_quantidade_total())
 
 
 
+def select_partidas_time(id_time):
+    TimeCasa = aliased(Time)
+    TimeVisitante = aliased(Time)
+
+    partidas_sql = (
+        select(Partida, TimeCasa, TimeVisitante)
+        .join(TimeCasa, Partida.time_casa_id == TimeCasa.id)
+        .join(TimeVisitante, Partida.time_visitante_id == TimeVisitante.id)
+        .where(or_(Partida.time_casa_id == id_time, Partida.time_visitante_id == id_time))
+    )
+    partidas_time = db_sesseion.execute(partidas_sql).all()
+    return partidas_time
+
+
+
 def salvar_partida(time_casa_id, time_visitante_id, gols_casa, gols_visitante, data_partida):
     try:
         partidanova = Partida(time_casa_id=int(time_casa_id), time_visitante_id=int(time_visitante_id),

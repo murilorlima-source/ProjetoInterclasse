@@ -30,6 +30,7 @@ def salvar_times(nome, responsavel, turma):
         db_sesseion.add(time_novo)
         db_sesseion.commit()  # salvar no banco
         flash('Time adicionado com sucesso', 'success')
+        return time_novo
     except SQLAlchemyError as e:
         db_sesseion.rollback()
         flash("Ocorreu um erro ao adicionar o time", 'error')
@@ -38,3 +39,12 @@ def salvar_times(nome, responsavel, turma):
         db_sesseion.rollback()
         flash("Ocorreu um erro ao adicionar o time", 'error')
         print(e)
+
+
+
+def select_um(id_time):
+    time_sql = select(Time).where(Time.id == id_time)
+    time = db_sesseion.execute(time_sql).scalar_one_or_none()
+    return time
+
+print(select_um(10))

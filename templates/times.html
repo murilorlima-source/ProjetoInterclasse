@@ -32,7 +32,19 @@
                     <input type="text" id="responsavel" name="responsavel" placeholder="Ex: Cleitin">
                 </div>
 
+
+            <div class="campo">
+                <label>Jogadores</label>
+                {% for jogador, time in jogadores %}
+                    <div class="linha-campos">
+                        <input type="checkbox" name="jogadores" value="{{ jogador.id }}" id="jogador_{{ jogador.id }}">
+                        <label for="jogador_{{ jogador.id }}">{{ jogador.nome }}</label>
+                    </div>
+
+                {% endfor %}
             </div>
+            </div>
+
             <div class="acoes-form">
                 <button type="submit" class="botao">Cadastrar</button>
                 <a href="{{ url_for('listar_times') }}" class="botao botao-secundario">Cancelar</a>
@@ -59,7 +71,7 @@
                 <tr>
 <!--                    #nome que esta no database-->
                     <td>{{ time.id }}</td>
-                    <td>{{ time.nome }}</td>
+                    <td><a href="{{ url_for('detalhes_time', id_time=time.id) }}">{{ time.nome }} </a></td>
                     <td>{{ time.turma }}</td>
                     <td>{{ jogadores }}</td>
                     <td>{{ time.responsavel }}</td>

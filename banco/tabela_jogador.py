@@ -1,7 +1,7 @@
 from flask import flash
-from sqlalchemy import select, func
+from sqlalchemy import select, func, join
 from sqlalchemy.exc import SQLAlchemyError
-from database import db_sesseion, Time, Jogador
+from database import db_sesseion, Time, Jogador, Partida
 
 
 def salvar_jogadores(nome, posicao, time_id, numero_camisa):
@@ -36,3 +36,18 @@ def select_quantidade_total():
     qtd_total = db_sesseion.execute(jogadores_sql).scalar()
     return qtd_total
 print(select_quantidade_total())
+
+
+
+
+def select_um(id_jogador):
+    jogador_sql = select(Jogador).where(Jogador.id == id_jogador)
+    jogador = db_sesseion.execute(jogador_sql).scalar_one_or_none()
+    return jogador
+print(select_um(1))
+
+def select_por_time(id_time):
+    jogador_sql = select(Jogador).where(Jogador.time_id == id_time)
+    jogador = db_sesseion.execute(jogador_sql).scalars().all()
+    return jogador
+print(select_por_time(1))
